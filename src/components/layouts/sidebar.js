@@ -25,7 +25,7 @@ const menu = [
     {
         name: "Certificate Management",
         icons: <DescriptionIcon />,
-        href: "/admin",
+        href: "/admin/certificate-management",
     },
     {
         name: "Users Management",
