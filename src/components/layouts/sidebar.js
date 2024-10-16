@@ -15,6 +15,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import GroupIcon from '@mui/icons-material/Group';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { signOut } from "next-auth/react"
 
 const menu = [
     {
@@ -30,7 +31,7 @@ const menu = [
     {
         name: "Users Management",
         icons: <GroupIcon />,
-        href: "/admin",
+        href: "/admin/user-management",
     },
     {
         name: "Profile",
@@ -40,11 +41,6 @@ const menu = [
     {
         name: "Log Activity",
         icons: <ReceiptIcon />,
-        href: "/admin",
-    },
-    {
-        name: "Log Out",
-        icons: <LogoutIcon />,
         href: "/admin",
     },
 ];
@@ -91,6 +87,14 @@ export function Sidebar({ open, setOpen }) {
                             </ListItem>
                         </Link>
                     ))}
+                    <button onClick={() => signOut()}>
+                        <ListItem className="cursor-pointer" onClick={closeDrawer}>
+                            <ListItemPrefix>
+                                <LogoutIcon />
+                            </ListItemPrefix>
+                            Log Out
+                        </ListItem>
+                    </button>
                 </List>
             </Drawer>
         </React.Fragment>
