@@ -19,29 +19,34 @@ import { signOut } from "next-auth/react"
 
 const menu = [
     {
-        name: "Dashboard",
+        name: "Home",
         icons: <DashboardIcon />,
         href: "/admin",
+        role: ['superadmin', 'admin', 'user']
     },
     {
         name: "Certificate Management",
         icons: <DescriptionIcon />,
         href: "/admin/certificate-management",
+        role: ['superadmin', 'admin']
     },
     {
         name: "Users Management",
         icons: <GroupIcon />,
         href: "/admin/user-management",
+        role: ['superadmin', 'admin']
     },
     {
-        name: "Profile",
+        name: "Your Account",
         icons: <PersonIcon />,
         href: "/admin",
+        role: ['superadmin', 'admin', 'user']
     },
     {
         name: "Log Activity",
         icons: <ReceiptIcon />,
         href: "/admin",
+        role: ['superadmin', 'admin']
     },
 ];
 

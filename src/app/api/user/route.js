@@ -3,6 +3,7 @@ import { dbConnect } from "@/lib/dbConnect";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs"
 import { getToken } from "next-auth/jwt";
+import { headers } from 'next/headers'
 
 const adminValidate = async (req) => {
     try {
@@ -51,20 +52,18 @@ export async function POST(req) {
 
 // GET USER
 export async function GET(req) {
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-    console.log({ token })
-
     try {
-        await dbConnect()
 
-        const user = await User.find({})
-        return NextResponse.json({ success: true, user });
+        await dbConnect();
+
+        const users = await User.find({});
+        return NextResponse.json({ success: true, users });
     } catch (error) {
-        console.log(error)
-        return NextResponse.json({ success: false, error: error });
+        console.error('Token verification error:', error);
+        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
-
 }
+
 
 // DELETE USER
 export async function DELETE(req) {
