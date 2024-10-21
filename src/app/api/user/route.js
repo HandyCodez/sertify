@@ -25,9 +25,6 @@ const adminValidate = async (req) => {
 
 // CREATE USER
 export async function POST(req) {
-    const validationResponse = await adminValidate(req);
-    if (validationResponse) return validationResponse;
-
     const { nim, password, name, phone, role } = await req.json()
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -67,8 +64,6 @@ export async function GET(req) {
 
 // DELETE USER
 export async function DELETE(req) {
-    const validationResponse = await adminValidate(req);
-    if (validationResponse) return validationResponse;
 
     const { nim } = await req.json()
     try {

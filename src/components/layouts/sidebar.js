@@ -37,6 +37,18 @@ const menu = [
         role: ['superadmin', 'admin']
     },
     {
+        name: "Jurusan Management",
+        icons: <GroupIcon />,
+        href: "/admin/jurusan-management",
+        role: ['superadmin', 'admin']
+    },
+    {
+        name: "Prodi Management",
+        icons: <GroupIcon />,
+        href: "/admin/prodi-management",
+        role: ['superadmin', 'admin']
+    },
+    {
         name: "Your Account",
         icons: <PersonIcon />,
         href: "/admin",

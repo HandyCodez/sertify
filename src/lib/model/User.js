@@ -14,8 +14,14 @@ const UserSchema = new Schema({
         type: String,
         required: [true, 'name is required']
     },
+    prodi: {
+        type: Schema.Types.ObjectId,
+        ref: 'Prodi',
+        required: true
+    },
     phone: {
         type: String,
+        unique: true,
         required: true
     },
     role: {
