@@ -15,6 +15,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import GroupIcon from '@mui/icons-material/Group';
 import LogoutIcon from '@mui/icons-material/Logout';
+import SchoolIcon from '@mui/icons-material/School';
+import ClassIcon from '@mui/icons-material/Class';
 import { signOut } from "next-auth/react"
 
 const menu = [
@@ -38,13 +40,13 @@ const menu = [
     },
     {
         name: "Jurusan Management",
-        icons: <GroupIcon />,
+        icons: <SchoolIcon />,
         href: "/admin/jurusan-management",
         role: ['superadmin', 'admin']
     },
     {
         name: "Prodi Management",
-        icons: <GroupIcon />,
+        icons: <ClassIcon />,
         href: "/admin/prodi-management",
         role: ['superadmin', 'admin']
     },
