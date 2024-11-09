@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs"
 import { getToken } from "next-auth/jwt";
 import { headers } from 'next/headers'
+import Prodi from "@/lib/model/Prodi";
+import Jurusan from "@/lib/model/Jurusan";
 
 const adminValidate = async (req) => {
     try {
@@ -52,8 +54,9 @@ export async function GET(req) {
     try {
 
         await dbConnect();
-
-        const users = await User.find({});
+        await Prodi.find({})
+        await Jurusan.find({})
+        const users = await User.find({}).populate('jurusan', 'name').populate('prodi', 'name');
         return NextResponse.json({ success: true, users });
     } catch (error) {
         console.error('Token verification error:', error);
@@ -73,4 +76,57 @@ export async function DELETE(req) {
     } catch (error) {
         return NextResponse.json({ success: false, error: error });
     }
+}
+
+// UPDATE USER
+export async function PUT(req) {
+
+    const { nim, password, name, phone, jurusan, prodi, role } = await req.json();
+    try {
+        await dbConnect();
+
+        // Prepare update data
+        const updateData = {
+            nim,
+            name,
+            phone,
+            jurusan,
+            prodi,
+            role
+        };
+
+        // If password is provided, hash it
+        if (password) {
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+            updateData.password = hashedPassword;
+        }
+
+        // Find and update user
+        const updatedUser = await User.findOneAndUpdate(
+            { nim: nim },
+            updateData,
+            { new: true } // Return updated document
+        ).select('-password'); // Exclude password from response
+
+        if (!updatedUser) {
+            return NextResponse.json(
+                { success: false, error: "User not found" },
+                { status: 404 }
+            );
+        }
+
+        return NextResponse.json({
+            success: true,
+            user: updatedUser
+        });
+
+    } catch (error) {
+        console.error('Update error:', error);
+        return NextResponse.json(
+            { success: false, error: error.message },
+            { status: 500 }
+        );
+    }
+
 }

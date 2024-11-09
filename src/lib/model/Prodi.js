@@ -9,11 +9,6 @@ const ProdiSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Jurusan',
         required: true
-    },
-    jenjang: {
-        type: String,
-        enum: ['D3', 'D4', 'S1'],
-        required: true
     }
 
 }, { timestamps: true, versionKey: false })

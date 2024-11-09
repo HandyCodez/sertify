@@ -14,6 +14,11 @@ const UserSchema = new Schema({
         type: String,
         required: [true, 'name is required']
     },
+    jurusan: {
+        type: Schema.Types.ObjectId,
+        ref: 'Jurusan',
+        required: true
+    },
     prodi: {
         type: Schema.Types.ObjectId,
         ref: 'Prodi',

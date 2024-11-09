@@ -1,0 +1,28 @@
+{
+    "_id": "672c59c953024d7c435983a6",
+    "user": {
+        "_id": "67132ecaefad718ae440c7a3",
+        "nim": "236152038",
+        "password": "$2a$10$a2FXxcVbQfDZIIgUSI4SYOJKo/NUODa4zMFMXdcxuCDGbNmQtCYKu",
+        "name": "Muhammad Alvin Oktafianda",
+        "phone": "081348436236",
+        "role": "user",
+        "createdAt": "2024-10-19T04:00:10.890Z",
+        "updatedAt": "2024-11-06T05:06:23.589Z",
+        "jurusan": "6715cebd3e5fdbc0eda6ec93",
+        "prodi": "6715f7b9fd4d52ed571a6e37"
+    },
+    "namaSertifikat": "dasdasfsa",
+    "jenisSertifikat": "penghargaan",
+    "lembagaPenerbit": "sadasdawa",
+    "tanggalPenerbitan": "2004-08-28T00:00:00.000Z",
+    "nomorSertifikat": "sdasafas",
+    "tingkatSertifikat": "sdasfa",
+    "deskripsi": "sadasfsadaw",
+    "fileSertifikat": "/uploads/1730959817352-10.png",
+    "kategoriSertifikat": "sfsaasadasw",
+    "status": "NT",
+    "createdAt": "2024-11-07T06:10:17.362Z",
+    "updatedAt": "2024-11-07T06:10:17.362Z",
+    "__v": 0
+}

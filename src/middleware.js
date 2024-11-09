@@ -3,17 +3,23 @@ import { getToken } from 'next-auth/jwt';
 
 export async function middleware(req) {
     const { pathname } = req.nextUrl;
+
+    // GET TOKEN
+    const token = await getToken({ req: req, secret: process.env.AUTH_SECRET });
+
     // Jika URL adalah root (/), redirect ke /admin
     if (pathname === '/') {
-        return NextResponse.redirect(new URL('/admin', req.url));
+        if (token?.role === 'superadmin' | 'admin') {
+            return NextResponse.redirect(new URL('/admin', req.url));
+        } else {
+            return NextResponse.redirect(new URL('/user', req.url));
+        }
     }
 
     if (pathname.startsWith('/api/auth') || pathname.startsWith('/api/auth/signin')) {
         return NextResponse.next();
     }
 
-    // GET TOKEN
-    const token = await getToken({ req: req, secret: process.env.AUTH_SECRET });
 
     // If no token is found, redirect to login page
     if (!token) {
@@ -24,6 +30,3 @@ export async function middleware(req) {
     return NextResponse.next();
 }
 
-export const config = {
-    matcher: ['/', '/admin/:path*'],
-};

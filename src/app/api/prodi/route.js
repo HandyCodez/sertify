@@ -1,57 +1,50 @@
 import { dbConnect } from "@/lib/dbConnect";
 import Jurusan from "@/lib/model/Jurusan";
+import Prodi from "@/lib/model/Prodi";
 import { NextResponse } from "next/server";
 
-// CREATE JURUSAN
+// CREATE PRODI
 export async function POST(req) {
-    const { name } = await req.json()
+    const { name, jurusan } = await req.json()
 
     try {
         await dbConnect()
-        const newJurusan = new Jurusan({
-            name
+        const newProdi = new Prodi({
+            name,
+            jurusan
         });
 
-        await newJurusan.save()
+        await newProdi.save()
 
-        return NextResponse.json({ success: true, newJurusan });
+        return NextResponse.json({ success: true, newProdi });
     } catch (error) {
         console.log(error)
         return NextResponse.json({ success: false, error: error });
     }
 }
 
-// GET JURUSAN
+// GET PRODI
 export async function GET(req) {
     try {
 
         await dbConnect();
+        await Jurusan.find({})
+        const prodi = await Prodi.find({}).populate('jurusan', 'name');
 
-        const jurusan = await Jurusan.aggregate([
-            {
-                $lookup: {
-                    from: 'prodis',
-                    localField: '_id',
-                    foreignField: 'jurusan',
-                    as: 'prodi'
-                }
-            }
-        ])
-
-        return NextResponse.json({ success: true, jurusan });
+        return NextResponse.json({ success: true, prodi });
     } catch (error) {
         console.error('Token verification error:', error);
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 }
 
-// DELETE JURUSAN
+// DELETE PRODI
 export async function DELETE(req) {
 
     const { _id } = await req.json()
     try {
         await dbConnect()
-        const jurusan = await Jurusan.findOneAndDelete({ _id: _id })
+        const jurusan = await Prodi.findOneAndDelete({ _id: _id })
         return NextResponse.json({ success: true, jurusan });
     } catch (error) {
         return NextResponse.json({ success: false, error: error });

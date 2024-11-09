@@ -1,8 +1,8 @@
-import mongoose, { Schema, model } from "mongoose";
+import mongoose from 'mongoose';
 
-const CertificateSchema = new Schema({
+const certificateSchema = new mongoose.Schema({
     user: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
@@ -22,25 +22,34 @@ const CertificateSchema = new Schema({
         type: Date,
         required: true
     },
-    nomorSertifikat: String,
+    nomorSertifikat: {
+        type: String,
+        required: true
+    },
     tingkatSertifikat: {
         type: String,
-        enum: ['lokal', 'nasional', 'internasional'],
         required: true
     },
-    deskripsi: String,
-    fileSertifikat: String,
+    deskripsi: {
+        type: String
+    },
+    fileSertifikat: {
+        type: String,
+        required: true
+    },
     kategoriSertifikat: {
         type: String,
-        enum: ['akademik', 'non-akademik', 'bahasa', 'teknologi'],
         required: true
     },
-    statusVerifikasi: {
-        type: Boolean,
-        default: false
+    status: {
+        type: String,
+        enum: ['T', 'NT', 'G'], // T: Terverifikasi, NT: Tidak Terverifikasi, G: Gagal Verifikasi
+        default: 'NT',
+        required: true
     }
 
-}, { timestamps: true, versionKey: false })
+}, {
+    timestamps: true
+});
 
-const Certificate = mongoose.models.Certificate || model('Certificate', CertificateSchema)
-export default Certificate
+export default mongoose.models.Certificate || mongoose.model('Certificate', certificateSchema);

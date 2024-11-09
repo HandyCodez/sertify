@@ -17,56 +17,71 @@ import GroupIcon from '@mui/icons-material/Group';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SchoolIcon from '@mui/icons-material/School';
 import ClassIcon from '@mui/icons-material/Class';
-import { signOut } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 
-const menu = [
+const adminMenu = [
     {
-        name: "Home",
+        name: "Dashboard",
         icons: <DashboardIcon />,
         href: "/admin",
-        role: ['superadmin', 'admin', 'user']
-    },
-    {
-        name: "Certificate Management",
-        icons: <DescriptionIcon />,
-        href: "/admin/certificate-management",
         role: ['superadmin', 'admin']
     },
     {
-        name: "Users Management",
+        name: "Certificate",
+        icons: <DescriptionIcon />,
+        href: "/admin/certificate",
+        role: ['superadmin', 'admin']
+    },
+    {
+        name: "Users",
         icons: <GroupIcon />,
         href: "/admin/user-management",
         role: ['superadmin', 'admin']
     },
     {
-        name: "Jurusan Management",
+        name: "Jurusan",
         icons: <SchoolIcon />,
         href: "/admin/jurusan-management",
         role: ['superadmin', 'admin']
     },
     {
-        name: "Prodi Management",
+        name: "Prodi",
         icons: <ClassIcon />,
         href: "/admin/prodi-management",
         role: ['superadmin', 'admin']
     },
     {
-        name: "Your Account",
-        icons: <PersonIcon />,
-        href: "/admin",
-        role: ['superadmin', 'admin', 'user']
-    },
-    {
         name: "Log Activity",
         icons: <ReceiptIcon />,
-        href: "/admin",
+        href: "/admin/activity",
         role: ['superadmin', 'admin']
     },
 ];
 
-export function Sidebar({ open, setOpen }) {
+const userMenu = [
+    {
+        name: "Dashboard",
+        icons: <DashboardIcon />,
+        href: "/dashboard",
+    },
+    {
+        name: "My Certificates",
+        icons: <DescriptionIcon />,
+        href: "/user/mycertificate",
+    },
+    {
+        name: "Your Account",
+        icons: <PersonIcon />,
+        href: "/account",
+    }
+];
 
+export function Sidebar({ open, setOpen }) {
+    const { data: session } = useSession();
     const closeDrawer = () => setOpen(false);
+
+    // Menentukan menu yang akan ditampilkan berdasarkan role
+    const menuToShow = session?.user?.role === 'user' ? userMenu : adminMenu;
 
     return (
         <React.Fragment>
@@ -96,7 +111,7 @@ export function Sidebar({ open, setOpen }) {
 
                 {/* Menu Items */}
                 <List>
-                    {menu.map((item, index) => (
+                    {session?.user?.role === 'superadmin' | 'admin' ? adminMenu.map((item, index) => (
                         <Link href={item.href} key={index} passHref>
                             <ListItem className="cursor-pointer" onClick={closeDrawer}>
                                 <ListItemPrefix>
@@ -105,8 +120,19 @@ export function Sidebar({ open, setOpen }) {
                                 {item.name}
                             </ListItem>
                         </Link>
-                    ))}
-                    <button onClick={() => signOut()}>
+                    )) : ''}
+                    <hr />
+                    {userMenu.map((item, index) => {
+                        return <Link href={item.href} key={index} passHref>
+                            <ListItem className="cursor-pointer" onClick={closeDrawer}>
+                                <ListItemPrefix>
+                                    {item.icons}
+                                </ListItemPrefix>
+                                {item.name}
+                            </ListItem>
+                        </Link>
+                    })}
+                    <button onClick={() => signOut()} className="w-full">
                         <ListItem className="cursor-pointer" onClick={closeDrawer}>
                             <ListItemPrefix>
                                 <LogoutIcon />

@@ -50,6 +50,7 @@ export const authOptions = {
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
+                token.id = user.id;
                 token.nim = user.nim;
                 token.name = user.name;
                 token.phone = user.phone;
@@ -59,6 +60,7 @@ export const authOptions = {
         },
         async session({ session, token }) {
             if (token && session.user) {
+                session.user.id = token.id;
                 session.user.nim = token.nim;
                 session.user.name = token.name;
                 session.user.phone = token.phone;
