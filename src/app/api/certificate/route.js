@@ -1,13 +1,11 @@
 import { dbConnect } from "@/lib/dbConnect";
 import { NextResponse } from "next/server";
 import Certificate from "../../../lib/model/Certificate"; // Buat model ini
-import { writeFile } from 'fs/promises';
+import { writeFile, unlink } from 'fs/promises';
 import path from 'path';
 
 // CREATE Certificate
 export async function POST(req) {
-    // const formData = await req.formData();
-    // console.log(formData)
     try {
         await dbConnect();
 
@@ -77,12 +75,25 @@ export async function PUT(req) {
         await dbConnect();
 
         const formData = await req.formData();
+        const idSertifikat = formData.get('idSertifikat');
+
+        // Ambil sertifikat yang ada
+        const certificate = await Certificate.findOne({ _id: idSertifikat });
+        if (!certificate) {
+            return NextResponse.json({ success: false, error: "Certificate not found" }, { status: 404 });
+        }
 
         // Handle new file upload if exists
         const file = formData.get('fileSertifikat');
         let fileUrl = formData.get('existingFileUrl'); // Keep existing file if no new file
 
         if (file && file instanceof Blob) {
+            // Hapus file lama jika ada
+            const oldFilePath = path.join(process.cwd(), 'public', certificate.fileSertifikat);
+            await unlink(oldFilePath).catch(err => {
+                console.error(`Failed to delete old file: ${err.message}`);
+            });
+
             const bytes = await file.arrayBuffer();
             const buffer = Buffer.from(bytes);
 
@@ -90,9 +101,10 @@ export async function PUT(req) {
             const filepath = path.join(process.cwd(), 'public', 'uploads', filename);
 
             await writeFile(filepath, buffer);
-            fileUrl = `/uploads/${filename}`;
+            fileUrl = `/uploads/${filename}`; // Update fileUrl to point to the new file
+        } else {
+            fileUrl = certificate.fileSertifikat; // Use existing file if no new file is uploaded
         }
-
 
         const updateData = {
             namaSertifikat: formData.get('namaSertifikat'),
@@ -102,22 +114,24 @@ export async function PUT(req) {
             nomorSertifikat: formData.get('nomorSertifikat'),
             tingkatSertifikat: formData.get('tingkatSertifikat'),
             deskripsi: formData.get('deskripsi'),
-            fileSertifikat: fileUrl,
+            fileSertifikat: fileUrl, // Save the new file URL
             kategoriSertifikat: formData.get('kategoriSertifikat'),
-            status: formData.get('status')
+            status: formData.get('status'),
         };
 
         const updatedCertificate = await Certificate.findByIdAndUpdate(
-            formData.get('idSertifikat'),
+            idSertifikat,
             updateData,
-            { new: true }
+            { new: true } // Return the updated document
         );
 
         return NextResponse.json({ success: true, certificate: updatedCertificate });
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
+
+
 }
 
 // DELETE Certificate
