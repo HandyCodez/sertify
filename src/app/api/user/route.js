@@ -27,17 +27,23 @@ const adminValidate = async (req) => {
 
 // CREATE USER
 export async function POST(req) {
-    const { nim, password, name, phone, role } = await req.json()
+
+    const { nim, password, name, phone, prodi } = await req.json()
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
         await dbConnect()
+        const prodiData = await Prodi.findById(prodi).populate('jurusan', 'name');
+
+
         const newUser = new User({
             nim,
             password: hashedPassword,
             name,
+            jurusan: prodiData.jurusan._id,
+            prodi: prodiData._id,
             phone,
-            role,
+            role: 'user',
         });
 
         await newUser.save()

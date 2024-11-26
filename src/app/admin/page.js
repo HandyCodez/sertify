@@ -11,8 +11,15 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import PeopleIcon from '@mui/icons-material/People';
 import SchoolIcon from '@mui/icons-material/School';
 import VerifiedIcon from '@mui/icons-material/Verified';
+import LoadingScreen from "@/components/loadingScreen";
+import useSWR from "swr";
+const fetcher = (...args) => fetch(...args).then((res) => res.json())
 
 export default function Page() {
+    const { data: user, isLoading: userLoading, error: userError } = useSWR('/api/user', fetcher)
+    const { data: certificate, isLoading: certiLoading, error: certiError } = useSWR('/api/certificate', fetcher)
+    if (userLoading || certiLoading) return <LoadingScreen />
+    if (userError && certiError) return <div>{JSON.stringify({ userError, certiError })}</div>
     return (
         <div className="p-4">
             {/* Header */}
@@ -36,21 +43,7 @@ export default function Page() {
                             <Typography variant="h6" color="blue-gray">
                                 Total Sertifikat
                             </Typography>
-                            <Typography variant="h4">1,234</Typography>
-                        </div>
-                    </CardBody>
-                </Card>
-
-                <Card>
-                    <CardBody className="flex items-center">
-                        <div className="rounded-full bg-green-500 p-3 mr-4">
-                            <PeopleIcon className="h-6 w-6 text-white" />
-                        </div>
-                        <div>
-                            <Typography variant="h6" color="blue-gray">
-                                Total Mahasiswa
-                            </Typography>
-                            <Typography variant="h4">567</Typography>
+                            <Typography variant="h4">{certificate.certificates.length}</Typography>
                         </div>
                     </CardBody>
                 </Card>
@@ -58,13 +51,27 @@ export default function Page() {
                 <Card>
                     <CardBody className="flex items-center">
                         <div className="rounded-full bg-orange-500 p-3 mr-4">
-                            <SchoolIcon className="h-6 w-6 text-white" />
+                            <PeopleIcon className="h-6 w-6 text-white" />
                         </div>
                         <div>
                             <Typography variant="h6" color="blue-gray">
-                                Jumlah Jurusan
+                                Total Users
                             </Typography>
-                            <Typography variant="h4">12</Typography>
+                            <Typography variant="h4">{user.users.length}</Typography>
+                        </div>
+                    </CardBody>
+                </Card>
+
+                <Card>
+                    <CardBody className="flex items-center">
+                        <div className="rounded-full bg-green-500 p-3 mr-4">
+                            <VerifiedIcon className="h-6 w-6 text-white" />
+                        </div>
+                        <div>
+                            <Typography variant="h6" color="blue-gray">
+                                Terverifikasi
+                            </Typography>
+                            <Typography variant="h4">{certificate.certificates.filter(item => item.status === "T").length}</Typography>
                         </div>
                     </CardBody>
                 </Card>
@@ -78,7 +85,7 @@ export default function Page() {
                             <Typography variant="h6" color="blue-gray">
                                 Perlu Verifikasi
                             </Typography>
-                            <Typography variant="h4">45</Typography>
+                            <Typography variant="h4">{certificate.certificates.filter(item => item.status === "NT").length}</Typography>
                         </div>
                     </CardBody>
                 </Card>
@@ -119,7 +126,7 @@ export default function Page() {
                 </CardBody>
             </Card>
 
-            {/* Recent Certificates */}
+            {/* Recent certificate */}
             <Card>
                 <CardBody>
                     <Typography variant="h6" color="blue-gray" className="mb-4">

@@ -50,19 +50,19 @@ const adminMenu = [
         href: "/admin/prodi-management",
         role: ['superadmin', 'admin']
     },
-    {
-        name: "Log Activity",
-        icons: <ReceiptIcon />,
-        href: "/admin/activity",
-        role: ['superadmin', 'admin']
-    },
+    // {
+    //     name: "Log Activity",
+    //     icons: <ReceiptIcon />,
+    //     href: "/admin/activity",
+    //     role: ['superadmin', 'admin']
+    // },
 ];
 
 const userMenu = [
     {
         name: "Dashboard",
         icons: <DashboardIcon />,
-        href: "/dashboard",
+        href: "/user",
     },
     {
         name: "My Certificates",
@@ -72,7 +72,7 @@ const userMenu = [
     {
         name: "Your Account",
         icons: <PersonIcon />,
-        href: "/account",
+        href: "/user/account",
     }
 ];
 
@@ -111,6 +111,7 @@ export function Sidebar({ open, setOpen }) {
 
                 {/* Menu Items */}
                 <List>
+                    {session?.user.role === 'superadmin' | 'admin' ? <><p>Admin Menu</p><hr className="border-t-2" /></> : ''}
                     {session?.user?.role === 'superadmin' | 'admin' ? adminMenu.map((item, index) => (
                         <Link href={item.href} key={index} passHref>
                             <ListItem className="cursor-pointer" onClick={closeDrawer}>
@@ -121,7 +122,8 @@ export function Sidebar({ open, setOpen }) {
                             </ListItem>
                         </Link>
                     )) : ''}
-                    <hr />
+
+                    {session?.user.role === 'superadmin' | 'admin' ? <><p className="mt-3">User Menu</p><hr className="border-t-2" /></> : ''}
                     {userMenu.map((item, index) => {
                         return <Link href={item.href} key={index} passHref>
                             <ListItem className="cursor-pointer" onClick={closeDrawer}>

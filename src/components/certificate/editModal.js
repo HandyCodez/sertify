@@ -158,15 +158,14 @@ export default function EditModal({ open, setOpen, mutate, certificate }) {
                                                                         key === 'status' ? 'Status*' : ''}
                                 </Typography>
                                 {key === 'jenisSertifikat' ? (
-                                    <Select
+                                    <Input
+                                        type={key === 'tanggalPenerbitan' ? 'date' : key === 'fileSertifikat' ? 'file' : 'text'}
                                         name={key}
-                                        value={value}
-                                        onChange={(val) => handleChange({ target: { name: key, value: val } })}
-                                    >
-                                        <Option value="kompetensi">Kompetensi</Option>
-                                        <Option value="pelatihan">Pelatihan</Option>
-                                        <Option value="penghargaan">Penghargaan</Option>
-                                    </Select>
+                                        value={key === 'fileSertifikat' ? undefined : value}
+                                        onChange={key === 'fileSertifikat' ? handleFileChange : handleChange}
+                                        placeholder={key === 'fileSertifikat' ? undefined : `Masukkan ${key.replace(/([A-Z])/g, ' $1').toLowerCase()}`}
+                                        accept={key === 'fileSertifikat' ? 'image/jpeg' : undefined}
+                                    />
                                 ) : key === 'status' ? (
                                     <Select
                                         name={key}

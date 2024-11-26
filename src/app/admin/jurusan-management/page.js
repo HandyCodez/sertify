@@ -122,11 +122,11 @@ export default function Page() {
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <div className="text-sm text-gray-900">
-                                                        <button
+                                                        {/* <button
                                                             className='bg-yellow-500 p-1 rounded-lg shadow-lg text-white mr-1 hover:bg-yellow-600 transition-colors'
                                                         >
                                                             <ModeEditIcon />
-                                                        </button>
+                                                        </button> */}
                                                         <button
                                                             onClick={() => handleDelete(jurusan)}
                                                             className='bg-red-500 p-1 rounded-lg shadow-lg text-white hover:bg-red-600 transition-colors'

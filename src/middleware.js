@@ -7,26 +7,65 @@ export async function middleware(req) {
     // GET TOKEN
     const token = await getToken({ req: req, secret: process.env.AUTH_SECRET });
 
-    // Jika URL adalah root (/), redirect ke /admin
+    // Paths yang hanya bisa diakses tanpa token (public paths)
+    if (pathname === '/login' || pathname === '/signup') {
+        if (token) {
+            // Jika user sudah login, redirect sesuai role
+            if (token.role === 'superadmin' || token.role === 'admin') {
+                return NextResponse.redirect(new URL('/admin', req.url));
+            } else {
+                return NextResponse.redirect(new URL('/user', req.url));
+            }
+        }
+        return NextResponse.next();
+    }
+
+    // Jika URL adalah root (/)
     if (pathname === '/') {
-        if (token?.role === 'superadmin' | 'admin') {
+        if (!token) {
+            return NextResponse.redirect(new URL('/login', req.url));
+        }
+        if (token.role === 'superadmin' || token.role === 'admin') {
             return NextResponse.redirect(new URL('/admin', req.url));
         } else {
             return NextResponse.redirect(new URL('/user', req.url));
         }
     }
 
-    if (pathname.startsWith('/api/auth') || pathname.startsWith('/api/auth/signin')) {
+    // Allow auth API routes
+    if (pathname.startsWith('/api/auth')) {
         return NextResponse.next();
     }
 
-
-    // If no token is found, redirect to login page
+    // Check if token exists for protected routes
     if (!token) {
-        return NextResponse.redirect(new URL('/api/auth/signin', req.url));
+        return NextResponse.redirect(new URL('/login', req.url));
     }
 
-    // Lanjutkan permintaan jika bukan root (/)
+    // Admin route protection
+    if (pathname.startsWith('/admin')) {
+        if (token.role !== 'admin' && token.role !== 'superadmin') {
+            return NextResponse.redirect(new URL('/user', req.url));
+        }
+        return NextResponse.next();
+    }
+
+    // User route protection
+    if (pathname.startsWith('/user')) {
+        return NextResponse.next();
+    }
+
     return NextResponse.next();
 }
 
+// Specify which routes this middleware should run for
+export const config = {
+    matcher: [
+        '/',
+        '/login',
+        '/signup',
+        '/admin/:path*',
+        '/user/:path*',
+        '/api/auth/:path*'
+    ]
+};

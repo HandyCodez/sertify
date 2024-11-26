@@ -183,7 +183,7 @@ export default function AddModal({ open, setOpen, mutate }) {
                         <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
                             Jenis Sertifikat*
                         </Typography>
-                        <Select
+                        {/* <Select
                             name="jenisSertifikat"
                             value={formData.jenisSertifikat}
                             onChange={(value) => handleChange({ target: { name: 'jenisSertifikat', value } })}
@@ -192,7 +192,14 @@ export default function AddModal({ open, setOpen, mutate }) {
                             <Option value="kompetensi">Kompetensi</Option>
                             <Option value="pelatihan">Pelatihan</Option>
                             <Option value="penghargaan">Penghargaan</Option>
-                        </Select>
+                        </Select> */}
+
+                        <Input
+                            name="jenisSertifikat"
+                            value={formData.jenisSertifikat}
+                            onChange={handleChange}
+                            placeholder="Masukkan jenis sertifikat"
+                        />
                     </div>
 
                     <div>
@@ -251,7 +258,7 @@ export default function AddModal({ open, setOpen, mutate }) {
                             type="file"
                             name="fileSertifikat"
                             onChange={handleFileChange}
-                            accept="application/jpg"
+                            accept="image/*"
                         />
                         <Typography variant="small" color="gray" className="mt-1">
                             Format yang diterima: JPG

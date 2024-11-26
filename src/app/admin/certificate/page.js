@@ -11,6 +11,7 @@ import EditModal from '@/components/certificate/editModal';
 import { Input, Option, Select } from '@material-tailwind/react';
 import SearchIcon from '@mui/icons-material/Search';
 import DetailModal from '@/components/certificate/detailModal';
+import { DeleteModal } from '@/components/certificate/deleteModal';
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -67,6 +68,7 @@ export default function Page() {
         <main className="px-3">
             <EditModal open={isEditModalOpen} setOpen={setIsEditModal} mutate={mutate} certificate={selectData} />
             <DetailModal open={isDetailModalOpen} setOpen={setIsDetailModalOpen} certificate={selectData} />
+            <DeleteModal open={isDeleteModalOpen} setOpen={setIsDeleteModalOpen} data={selectData} mutate={mutate} />
             <div className="bg-white rounded-lg shadow-lg p-3 mb-3">
                 <div className="flex justify-between items-center mb-6">
                     <div className="flex items-center">

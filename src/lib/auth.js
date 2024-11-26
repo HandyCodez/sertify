@@ -25,7 +25,8 @@ export const authOptions = {
 
                 await dbConnect();
 
-                const user = await User.findOne({ nim: credentials.nim });
+                const user = await User.findOne({ nim: credentials.nim }).populate('jurusan', 'name').populate('prodi', 'name');
+                console.log(user)
 
                 if (!user) {
                     throw new Error("No user found with this NIM");
@@ -43,6 +44,8 @@ export const authOptions = {
                     name: user.name,
                     phone: user.phone,
                     role: user.role,
+                    jurusan: user.jurusan,
+                    prodi: user.prodi,
                 };
             },
         })
@@ -55,6 +58,8 @@ export const authOptions = {
                 token.name = user.name;
                 token.phone = user.phone;
                 token.role = user.role;
+                token.jurusan = user.jurusan;
+                token.prodi = user.prodi;
             }
             return token;
         },
@@ -65,9 +70,15 @@ export const authOptions = {
                 session.user.name = token.name;
                 session.user.phone = token.phone;
                 session.user.role = token.role;
+                session.user.jurusan = token.jurusan;
+                session.user.prodi = token.prodi;
                 session.accessToken = token.sub; // Use token's 'sub' field as accessToken
             }
             return session;
         },
+    },
+    pages: {
+        signIn: '/login',
     }
+
 };

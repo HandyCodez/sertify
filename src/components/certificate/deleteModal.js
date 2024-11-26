@@ -12,10 +12,10 @@ export function DeleteModal({ open, setOpen, data, mutate }) {
 
     const handleDelete = async () => {
         const response = await fetch(
-            '/api/user', {
+            '/api/certificate', {
             method: 'DELETE',
             body: JSON.stringify({
-                nim: data.nim
+                id: data._id
             })
         })
         const result = await response.json()
